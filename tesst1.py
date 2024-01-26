@@ -12,15 +12,32 @@ pricing_data = {
 }
 df = pd.DataFrame(pricing_data)
 
-# User input for model selection
-model = st.selectbox("Choose a ChatGPT Model", df["Model"])
+# Display pricing tables
+st.subheader("GPT-4 Pricing Details")
+st.table(df[df["Model"].str.contains("gpt-4")])
+
+st.subheader("GPT-3 Pricing Details")
+st.table(df[df["Model"].str.contains("gpt-3.5")])
 
 # User input for token count
 token_count = st.number_input("Enter the number of tokens (in thousands)", min_value=1.0, step=1.0)
 
-# Calculation
-selected_model_data = df[df["Model"] == model].iloc[0]
-total_cost = (selected_model_data["Input Price per 1K Tokens"] + selected_model_data["Output Price per 1K Tokens"]) * token_count
+# Calculate and display prices for each model based on token count
+df["Total Input Cost"] = df["Input Price per 1K Tokens"] * token_count
+df["Total Output Cost"] = df["Output Price per 1K Tokens"] * token_count
+st.subheader("Cost per Model for Given Token Count")
+st.table(df)
 
-# Display result
-st.write(f"The total cost for using {model} with {token_count}K tokens is: ${total_cost:.2f}")
+# Additional user input for activations per day
+activations_per_day = st.number_input("Enter the number of activations per day", min_value=1, step=1)
+
+# Calculating monthly cost
+days_in_month = 30  # Assuming an average month
+df["Monthly Total Cost"] = (df["Total Input Cost"] + df["Total Output Cost"]) * activations_per_day * days_in_month
+
+# Display monthly cost tables
+st.subheader("Monthly Total Cost for GPT-4 Models")
+st.table(df[df["Model"].str.contains("gpt-4")][["Model", "Monthly Total Cost"]])
+
+st.subheader("Monthly Total Cost for GPT-3 Models")
+st.table(df[df["Model"].str.contains("gpt-3.5")][["Model", "Monthly Total Cost"]])
