@@ -20,8 +20,8 @@ st.subheader("GPT-3 Pricing Details")
 st.table(df[df["Model"].str.contains("gpt-3.5")])
 
 # User input for token counts
-input_token_count = st.number_input("Enter the number of input tokens (in thousands)", min_value=1.0, step=1.0, key="input_tokens")
-output_token_count = st.number_input("Enter the number of output tokens (in thousands)", min_value=1.0, step=1.0, key="output_tokens")
+input_token_count = st.number_input("Enter the number of input tokens (in thousands)", min_value=0.1, step=0.1, key="input_tokens")
+output_token_count = st.number_input("Enter the number of output tokens (in thousands)", min_value=0.1, step=0.1, key="output_tokens")
 
 # Multiselect for models
 selected_models = st.multiselect("Select models to display costs", df["Model"].tolist(), default=df["Model"].tolist())
